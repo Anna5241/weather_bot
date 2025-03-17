@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Services;
+
+use GuzzleHttp\Client;
+use Exception;
+
+class Text2ImageService
+{
+    private $url;
+    private $authHeaders;
+
+    public function __construct($apiKey, $secretKey)
+    {
+        $this->url = 'https://api-key.fusionbrain.ai/';
+        $this->authHeaders = [
+            'X-Key' => "Key $apiKey",
+            'X-Secret' => "Secret $secretKey"
+        ];
+    }
+
+    public function getModels()
+    {
+        $client = new Client();
+        $response = $client->get($this->url . 'key/api/v1/models', [
+            'headers' => $this->authHeaders
+        ]);
+        $data = json_decode($response->getBody(), true);
+        return $data[0]['id'];
+    }
+
+    public function generate($prompt, $model, $images, $width, $height, $style)
+    {
+        $styles = ["KADINSKY", "UHD", "ANIME", "DEFAULT"];
+        $params = [
+            'type' => "GENERATE",
+            'numImages' => $images,
+            'width' => $width,
+            'height' => $height,
+            'style' => $styles[$style],
+            'generateParams' => [
+                'query' => $prompt
+            ]
+        ];
+
+        $formData = [
+            [
+                'name' => 'model_id',
+                'contents' => $model
+            ],
+            [
+                'name' => 'params',
+                'contents' => json_encode($params),
+                'headers' => ['Content-Type' => 'application/json']
+            ]
+        ];
+
+        $client = new Client();
+        $response = $client->post($this->url . 'key/api/v1/text2image/run', [
+            'multipart' => $formData,
+            'headers' => $this->authHeaders
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+        return $data['uuid'];
+    }
+
+    public function checkGeneration($requestId, $attempts = 10, $delay = 10)
+    {
+        $client = new Client();
+        while ($attempts > 0) {
+            try {
+                $response = $client->get($this->url . 'key/api/v1/text2image/status/' . $requestId, [
+                    'headers' => $this->authHeaders
+                ]);
+                $data = json_decode($response->getBody(), true);
+                if ($data['status'] === 'DONE') {
+                    return $data['images'];
+                }
+            } catch (Exception $e) {
+                throw new Exception('Error: ' . $e->getMessage());
+            }
+            $attempts--;
+            sleep($delay);
+        }
+        return null;
+    }
+}
