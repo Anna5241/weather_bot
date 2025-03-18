@@ -4,6 +4,7 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class Text2ImageService
 {
@@ -65,17 +66,21 @@ class Text2ImageService
         return $data['uuid'];
     }
 
-    public function checkGeneration($requestId, $attempts = 10, $delay = 10)
+    public function checkGeneration($requestId, $attempts = 30, $delay = 10)
     {
         $client = new Client();
         while ($attempts > 0) {
+//            Log::info('Попытка генерации №', $attempts);
             try {
+
                 $response = $client->get($this->url . 'key/api/v1/text2image/status/' . $requestId, [
                     'headers' => $this->authHeaders
                 ]);
                 $data = json_decode($response->getBody(), true);
                 if ($data['status'] === 'DONE') {
+//                    Log::info('Изображение сгенерировано с попытки ', $attempts);
                     return $data['images'];
+
                 }
             } catch (Exception $e) {
                 throw new Exception('Error: ' . $e->getMessage());
@@ -83,6 +88,7 @@ class Text2ImageService
             $attempts--;
             sleep($delay);
         }
+//        Log::info('Не сгенерировано(');
         return null;
     }
 }

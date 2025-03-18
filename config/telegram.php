@@ -133,6 +133,7 @@ return [
         HelpCommand::class,
         App\Console\Commands\Telegram\StartCommand::class,
         App\Console\Commands\Telegram\GenerateImageCommand::class,
+        App\Console\Commands\Telegram\CheckWeatherCommand::class,
     ],
 
     /*
