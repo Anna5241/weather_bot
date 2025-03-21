@@ -66,7 +66,7 @@ class CheckWeatherCommand extends Command implements CommandInterface
         // Отправляем промежуточный ответ
         $this->telegram->sendMessage([
             'chat_id' => $chatId,
-            'text' => 'Начинаем генерацию...',
+            'text' => 'Проверяем погоду, подождите, пожалуйста...',
         ]);
 
         // Отправляем задачу в очередь
