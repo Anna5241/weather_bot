@@ -14,7 +14,7 @@ class CheckWeatherCommand extends Command implements CommandInterface
 {
 
     protected string $name = 'check_weather';
-    protected string $description = 'Получить текущую погоду';
+    protected string $description = '⛅ Узнать текущую погоду';
 
     protected ?Api $telegram;
 
@@ -40,67 +40,34 @@ class CheckWeatherCommand extends Command implements CommandInterface
         if (empty($city)) {
             $this->telegram->sendMessage([
                 'chat_id' => $chatId,
-                'text' => 'Пожалуйста, укажите город. Например: /check_weather Москва',
+                'text' => "🌍 Пожалуйста, укажите город.\nПример: /check_weather Москва",
             ]);
             return response()->json(['status' => 'success']);
         }
-
-        // Получаем погоду
-        $weather = $this->getWeather($city);
-
-        if ($weather) {
-            $message = "Погода в городе {$city}:\n";
-            $message .= "Температура: {$weather['temp_c']}°C\n";
-            $message .= "Состояние: {$weather['condition']['text']}\n";
-            $message .= "Влажность: {$weather['humidity']}%\n";
-            $message .= "Скорость ветра: {$weather['wind_kph']} км/ч";
-        } else {
-            $message = 'Не удалось получить данные о погоде. Проверьте название города.';
+        if ($city === "Кайфоград") {
+            $city = "Невинномысск";
         }
 
 
-        $text = $weather['condition']['text'];
 
-        Log::info('chat_id=' . $chatId);
+
+
 
         // Отправляем промежуточный ответ
         $this->telegram->sendMessage([
             'chat_id' => $chatId,
-            'text' => 'Проверяем погоду, подождите, пожалуйста...',
+            'text' => "⏳ <b>Проверяем текущую погоду в городе {$city}...</b>\n\n🌤️ Результат появится здесь через несколько секунд!",
+            'parse_mode' => 'HTML'
         ]);
 
         // Отправляем задачу в очередь
-        ProcessImageGenerationWithWeather::dispatch($chatId, $text, $message);
+        ProcessImageGenerationWithWeather::dispatch($chatId, $city);
         Log::info('Отправили на генерацию');
 
         // Возвращаем успешный ответ (если нужно)
         return response()->json(['status' => 'success']);
     }
 
-    protected function getWeather($city)
-    {
-        $apiKey = env('WEATHER_API_KEY');
-        $url = "http://api.weatherapi.com/v1/current.json?key={$apiKey}&q={$city}&lang=ru";
 
-        try {
-            $response = Http::get($url);
-
-            if ($response->successful()) {
-                return $response->json()['current'];
-            } else {
-                Log::error('Ошибка при запросе погоды:', [
-                    'city' => $city,
-                    'response' => $response->body(),
-                ]);
-                return null;
-            }
-        } catch (\Exception $e) {
-            Log::error('Ошибка при запросе погоды:', [
-                'city' => $city,
-                'error' => $e->getMessage(),
-            ]);
-            return null;
-        }
-    }
 
 }

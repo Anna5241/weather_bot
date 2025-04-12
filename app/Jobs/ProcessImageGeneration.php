@@ -16,12 +16,12 @@ class ProcessImageGeneration implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $chatId;
-    protected $text = 'груша';
+    protected $prompt;
 
-    public function __construct($chatId, $text)
+    public function __construct($chatId, $prompt)
     {
         $this->chatId = $chatId;
-        $this->text = $text;
+        $this->prompt = $prompt;
     }
 
     public function handle()
@@ -34,7 +34,7 @@ class ProcessImageGeneration implements ShouldQueue
 
         try {
             $modelId = $text2ImageService->getModels();
-            $requestId = $text2ImageService->generate('груша', $modelId, 1, 1024, 1024, 3); // 3 соответствует стилю "DEFAULT"
+            $requestId = $text2ImageService->generate($this->prompt, $modelId, 1, 1024, 1024, 3); // 3 соответствует стилю "DEFAULT"
 
             Log::info('Начинаем генерацию');
             $images = $text2ImageService->checkGeneration($requestId);
@@ -48,7 +48,10 @@ class ProcessImageGeneration implements ShouldQueue
 
                     $telegram->sendPhoto([
                         'chat_id' => $this->chatId,
+                        'caption' => "🖼️ <b>Готово!</b>\n".
+                            "🎨 <i>".htmlspecialchars($this->prompt)."</i>",
                         'photo' => fopen($tempFile, 'r'),
+                        'parse_mode' => 'HTML'
                     ]);
 
                     unlink($tempFile);
@@ -57,14 +60,13 @@ class ProcessImageGeneration implements ShouldQueue
                 Log::info('Not generated');
                 $telegram->sendMessage([
                     'chat_id' => $this->chatId,
-                    'text' => 'Не удалось сгенерировать изображение.',
+                    'text' => "😞 <b>Не удалось сгенерировать изображение</b>\n\n".
+                        "Попробуйте изменить запрос или повторить позже.",
+                    'parse_mode' => 'HTML'
                 ]);
             }
         } catch (\Exception $e) {
-            $telegram->sendMessage([
-                'chat_id' => $this->chatId,
-                'text' => 'Произошла ошибка: ' . $e->getMessage(),
-            ]);
+            Log::error('Ошибка генерации: '.$e->getMessage());
         }
     }
 }

@@ -130,10 +130,14 @@ return [
     |
     */
     'commands' => [
-        HelpCommand::class,
+        App\Console\Commands\Telegram\CustomHelpCommand::class,
         App\Console\Commands\Telegram\StartCommand::class,
         App\Console\Commands\Telegram\GenerateImageCommand::class,
         App\Console\Commands\Telegram\CheckWeatherCommand::class,
+        App\Console\Commands\Telegram\SubscribeForWeaherInCity::class,
+        App\Console\Commands\Telegram\UnsubscribeAllCitiesCommand::class,
+        App\Console\Commands\Telegram\UnsubscribeConcreteCityCommand::class,
+        App\Console\Commands\Telegram\CheckSubscriptionsCommand::class,
     ],
 
     /*

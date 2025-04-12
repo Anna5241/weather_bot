@@ -8,11 +8,11 @@ class StartCommand extends Command
 {
 
     protected string $name = 'start';
-    protected string $description = 'Команда для начала работы с ботом';
+    protected string $description = '🚀 Начать работу с ботом';
 
     public function handle()
     {
-        $response = "Привет! Я погодный телеграмм-бот!";
+        $response = "Привет!👋 \nЯ погодный телеграмм-бот!\nЧтобы увидеть команды нажми /help";
         $this->replyWithMessage(['text' => $response]);
     }
 }

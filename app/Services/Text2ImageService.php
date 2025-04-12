@@ -23,7 +23,7 @@ class Text2ImageService
     public function getModels()
     {
         $client = new Client();
-        $response = $client->get($this->url . 'key/api/v1/models', [
+        $response = $client->get($this->url . 'key/api/v1/pipelines', [
             'headers' => $this->authHeaders
         ]);
         $data = json_decode($response->getBody(), true);
@@ -44,20 +44,32 @@ class Text2ImageService
             ]
         ];
 
+//        $formData = [
+//            [
+//                'name' => 'model_id',
+//                'contents' => $model
+//            ],
+//            [
+//                'name' => 'params',
+//                'contents' => json_encode($params),
+//                'headers' => ['Content-Type' => 'application/json']
+//            ]
+//
+//        ];
         $formData = [
-            [
-                'name' => 'model_id',
-                'contents' => $model
-            ],
-            [
-                'name' => 'params',
-                'contents' => json_encode($params),
-                'headers' => ['Content-Type' => 'application/json']
-            ]
-        ];
+        [
+            'name' => 'pipeline_id',
+            'contents' => $model
+        ],
+        [
+            'name' => 'params',
+            'contents' => json_encode($params),
+            'headers' => ['Content-Type' => 'application/json']
+        ]
+    ];
 
         $client = new Client();
-        $response = $client->post($this->url . 'key/api/v1/text2image/run', [
+        $response = $client->post($this->url . 'key/api/v1/pipeline/run', [
             'multipart' => $formData,
             'headers' => $this->authHeaders
         ]);
@@ -73,13 +85,13 @@ class Text2ImageService
 //            Log::info('Попытка генерации №', $attempts);
             try {
 
-                $response = $client->get($this->url . 'key/api/v1/text2image/status/' . $requestId, [
+                $response = $client->get($this->url . 'key/api/v1/pipeline/status/' . $requestId, [
                     'headers' => $this->authHeaders
                 ]);
                 $data = json_decode($response->getBody(), true);
                 if ($data['status'] === 'DONE') {
 //                    Log::info('Изображение сгенерировано с попытки ', $attempts);
-                    return $data['images'];
+                    return $data['result']['files'];
 
                 }
             } catch (Exception $e) {

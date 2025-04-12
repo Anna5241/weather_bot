@@ -11,7 +11,7 @@ use Telegram\Bot\Api;
 class GenerateImageCommand extends Command implements CommandInterface
 {
     protected string $name = 'generate_image';
-    protected string $description = 'Команда для генерации изображения';
+    protected string $description = '🎨 Сгенерировать изображение';
     protected ?Api $telegram;
 
     public function __construct()
@@ -30,16 +30,29 @@ class GenerateImageCommand extends Command implements CommandInterface
         // Извлекаем текст сообщения (если нужно)
         $text = $update->getMessage()->getText();
 
-        Log::info('chat_id=' . $chatId);
+        // Убираем команду /check_weather из текста
+        $prompt = trim(str_replace('/generate_image', '', $text));
+
+        if (empty($prompt)) {
+            $this->telegram->sendMessage([
+                'chat_id' => $chatId,
+                'text' => "🖌️ Пожалуйста, укажите описание изображения.\n\n".
+                        "🌄  Пример: /generate_image закат над Кайфоградом\n",
+            ]);
+            return response()->json(['status' => 'success']);
+        }
 
         // Отправляем промежуточный ответ
         $this->telegram->sendMessage([
             'chat_id' => $chatId,
-            'text' => 'Начинаем генерацию...',
+            'text' => "🎨 Принято! Начинаю генерацию изображения по запросу:\n".
+                "\"<i>{$prompt}</i>\"\n\n".
+                "⏳ Это может занять некоторое время...",
+            'parse_mode' => 'HTML',
         ]);
 
         // Отправляем задачу в очередь
-        ProcessImageGeneration::dispatch($chatId, $text);
+        ProcessImageGeneration::dispatch($chatId, $prompt);
         Log::info('Отправили на генерацию');
 
         // Возвращаем успешный ответ (если нужно)
