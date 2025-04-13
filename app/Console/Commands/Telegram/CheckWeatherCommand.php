@@ -48,11 +48,6 @@ class CheckWeatherCommand extends Command implements CommandInterface
             $city = "Невинномысск";
         }
 
-
-
-
-
-
         // Отправляем промежуточный ответ
         $this->telegram->sendMessage([
             'chat_id' => $chatId,

@@ -20,8 +20,8 @@ class UnsubscribeAllCitiesCommand extends Command implements CommandInterface
         $deleted = WeatherSubscription::where('chat_id', $chatId)->delete();
 
         $message = $deleted
-            ? 'Вы отписались от рассылки погоды.'
-            : 'У вас не было активной подписки.';
+            ? '❌Вы отписались от рассылки погоды.'
+            : '⚠️У вас не было активной подписки.';
 
         $this->replyWithMessage(['text' => $message]);
     }

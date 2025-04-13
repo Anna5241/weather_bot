@@ -21,7 +21,7 @@ class CheckSubscriptionsCommand extends Command implements CommandInterface
 
         if ($subscriptions->isEmpty()) {
             $this->replyWithMessage([
-                'text' => 'У вас нет активных подписок на погоду.',
+                'text' => '⚠️У вас нет активных подписок на погоду.',
                 'parse_mode' => 'HTML'
             ]);
             return;

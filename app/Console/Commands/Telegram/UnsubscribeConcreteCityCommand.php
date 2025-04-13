@@ -57,6 +57,7 @@ class UnsubscribeConcreteCityCommand extends Command implements CommandInterface
                 'parse_mode' => 'HTML'
             ]);
         }
+
     }
 
 }
