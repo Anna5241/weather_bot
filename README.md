@@ -47,7 +47,7 @@ cp .env.example .env
 nano .env  # Редактируем настройки
 
 # Запуск сервера
-php artisan serve
+php artisan serve --port=8000
 
 # В отдельных терминалах:
 php artisan queue:work --timeout=3500
@@ -92,8 +92,8 @@ php artisan test
 
 ### 📚 Документация API 
 ### 📬 Поддержка
-Проблемы: GitHub Issues
-Контакты в telegram: @the_best_bitch @KravtsovaMarina @KuroNeckojinja
+- Проблемы: GitHub Issues
+- Контакты в telegram: @the_best_bitch @KravtsovaMarina @KuroNeckojinja
 
 
 
