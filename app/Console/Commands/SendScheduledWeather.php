@@ -7,7 +7,6 @@ use Illuminate\Console\Command;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Update;
 
-
 class SendScheduledWeather extends Command
 {
     protected $signature = 'weather:send';
