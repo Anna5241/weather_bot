@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Client;
 use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 class Text2ImageService

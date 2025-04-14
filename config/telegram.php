@@ -1,6 +1,5 @@
 <?php
 
-use Telegram\Bot\Commands\HelpCommand;
 
 return [
     /*

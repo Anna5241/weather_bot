@@ -3,9 +3,7 @@
 namespace App\Console\Commands\Telegram;
 
 use App\Models\WeatherSubscription;
-use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Commands\Command;
-use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Commands\CommandInterface;
 
 class GetWeatherThreeTimesADayCommand extends Command implements CommandInterface
