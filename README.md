@@ -56,8 +56,9 @@ php artisan schedule:work
 # Настройка ngrok
 ngrok http 8000
 curl -F "url=<NGROK_URL>" "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook"
+```
 
-### Локальный запуск через Docker
+### Запуск через Docker
 ```bash
 docker compose up -d
 
@@ -66,3 +67,33 @@ docker compose logs ngrok --tail=100
 
 # Устанавливаем вебхук (замените параметры)
 curl -F "url=<NGROK_URL>" "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook"
+```
+
+### ⚙ Конфигурация
+```ini
+TELEGRAM_BOT_TOKEN=ваш_токен
+WEATHER_API_KEY=ключ_weatherapi
+FUSION_BRAIN_API_KEY=ключ_kandinsky
+FUSION_BRAIN_SECRET_KEY=секрет_kandinsky
+NGROK_AUTH_TOKEN=ваш_ngrok_токен
+
+# База данных (по умолчанию SQLite)
+DB_CONNECTION=sqlite
+DB_DATABASE=/полный/путь/к/database.sqlite
+
+# Очереди
+QUEUE_CONNECTION=redis
+```
+
+### 🧪 Тестирование
+```bash
+php artisan test
+```
+
+### 📚 Документация API 
+### 📬 Поддержка
+Проблемы: GitHub Issues
+Контакты в telegram: @the_best_bitch @KravtsovaMarina @KuroNeckojinja
+
+
+
