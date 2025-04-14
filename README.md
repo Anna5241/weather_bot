@@ -17,10 +17,10 @@ Laravel-бот для Telegram, предоставляющий прогноз п
 - `/start` - Начать работу с ботом
 - `/help` - Показать все команды
 - `/check_weather [город]` - Текущая погода + AI-изображение
-- `/subscribe_for_weather_in_city` - Подписка на рассылку (3 раза/день)
+- `/subscribe_for_weather_in_city [город]` - Подписка на рассылку (3 раза/день)
 - `/unsubscribe_all_cities` - Отписаться от всех рассылок
 - `/check_subscriptions` - Активные подписки
-- `/unsubscribe_concrete_city` - Отписаться от рассылки погоды одного города
+- `/unsubscribe_concrete_city [город]` - Отписаться от рассылки погоды одного города
 
 ## 🏗 Архитектура
 ### Основной стек
@@ -91,6 +91,22 @@ php artisan test
 ```
 
 ### 📚 Документация API 
+
+#### Команды бота
+
+| Команда       | Описание |
+|----------------|------------|
+| /start         | Laravel 12 |
+| /help    | SQLite/MySQL |
+| /check_weather [город]        | Redis      |
+| /subscribe_for_weather_in_city [город]    | Laravel Scheduler |
+| /unsubscribe_all_cities    | Laravel Scheduler |
+| /check_subscriptions    | Laravel Scheduler |
+| /unsubscribe_concrete_city [город]    | Laravel Scheduler |
+
+#### Вебхук
+POST /api/webhook - Обработчик вебхука Telegram
+
 ### 📬 Поддержка
 - Проблемы: GitHub Issues
 - Контакты в telegram: @the_best_bitch @KravtsovaMarina @KuroNeckojinja
