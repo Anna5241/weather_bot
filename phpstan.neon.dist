@@ -1,0 +1,12 @@
+includes:
+    - /home/miet/projects/weather-bot/vendor/laravel/framework/src
+    - app
+
+parameters:
+    level: max
+    paths:
+        - app
+        - config
+        - database
+        - routes
+        - tests

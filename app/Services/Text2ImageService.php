@@ -44,18 +44,18 @@ class Text2ImageService
             ]
         ];
 
-//        $formData = [
-//            [
-//                'name' => 'model_id',
-//                'contents' => $model
-//            ],
-//            [
-//                'name' => 'params',
-//                'contents' => json_encode($params),
-//                'headers' => ['Content-Type' => 'application/json']
-//            ]
-//
-//        ];
+        //        $formData = [
+        //            [
+        //                'name' => 'model_id',
+        //                'contents' => $model
+        //            ],
+        //            [
+        //                'name' => 'params',
+        //                'contents' => json_encode($params),
+        //                'headers' => ['Content-Type' => 'application/json']
+        //            ]
+        //
+        //        ];
         $formData = [
         [
             'name' => 'pipeline_id',
@@ -82,7 +82,7 @@ class Text2ImageService
     {
         $client = new Client();
         while ($attempts > 0) {
-//            Log::info('Попытка генерации №', $attempts);
+            //            Log::info('Попытка генерации №', $attempts);
             try {
 
                 $response = $client->get($this->url . 'key/api/v1/pipeline/status/' . $requestId, [
@@ -90,7 +90,7 @@ class Text2ImageService
                 ]);
                 $data = json_decode($response->getBody(), true);
                 if ($data['status'] === 'DONE') {
-//                    Log::info('Изображение сгенерировано с попытки ', $attempts);
+                    //                    Log::info('Изображение сгенерировано с попытки ', $attempts);
                     return $data['result']['files'];
 
                 }
@@ -100,7 +100,7 @@ class Text2ImageService
             $attempts--;
             sleep($delay);
         }
-//        Log::info('Не сгенерировано(');
+        //        Log::info('Не сгенерировано(');
         return null;
     }
 }
