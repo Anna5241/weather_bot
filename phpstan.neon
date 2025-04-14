@@ -1,0 +1,26 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - config
+        - routes
+
+    # Уровень строгости (0-9)
+    level: 5
+
+    # Для работы с Laravel фасадами
+    universalObjectCratesClasses:
+        - Illuminate\Support\Facades\Http
+        - Telegram\Bot\Api
+
+    # Игнорируемые ошибки для специфичных случаев
+    ignoreErrors:
+        - '#Unsafe usage of new static#'
+        - '#Call to an undefined method Telegram\\Bot\\Api::.*#'
+        - '#Method Illuminate\\Support\\Facades\\Http::.*#'
+
+    # Для работы с HTTP клиентом
+    bootstrapFiles:
+        - bootstrap/app.php

@@ -4,10 +4,9 @@ namespace App\Console\Commands\Telegram;
 
 use App\Jobs\ProcessImageGenerationWithWeather;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
+use Telegram\Bot\Api;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Commands\CommandInterface;
-use Telegram\Bot\Api;
 
 class CheckWeatherCommand extends Command implements CommandInterface
 {

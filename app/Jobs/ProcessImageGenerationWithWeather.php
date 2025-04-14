@@ -2,12 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Services\Text2ImageService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Services\Text2ImageService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
@@ -104,13 +104,13 @@ class ProcessImageGenerationWithWeather implements ShouldQueue
 
             if ($response->successful()) {
                 return $response->json()['current'];
-            } else {
-                Log::error('Ошибка при запросе погоды:', [
-                    'city' => $city,
-                    'response' => $response->body(),
-                ]);
-                return null;
             }
+            Log::error('Ошибка при запросе погоды:', [
+                'city' => $city,
+                'response' => $response->body(),
+            ]);
+            return null;
+            
         } catch (\Exception $e) {
             Log::error('Ошибка при запросе погоды:', [
                 'city' => $city,
