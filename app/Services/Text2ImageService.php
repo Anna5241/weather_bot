@@ -10,20 +10,22 @@ class Text2ImageService
 {
     private $url;
     private $authHeaders;
+    private $client; // Добавляем свойство для хранения клиента
 
-    public function __construct($apiKey, $secretKey)
+
+    public function __construct($apiKey, $secretKey, Client $client = null)
     {
         $this->url = 'https://api-key.fusionbrain.ai/';
         $this->authHeaders = [
             'X-Key' => "Key $apiKey",
             'X-Secret' => "Secret $secretKey"
         ];
+        $this->client = $client ?? new Client();
     }
 
     public function getModels()
     {
-        $client = new Client();
-        $response = $client->get($this->url . 'key/api/v1/pipelines', [
+        $response = $this->client->get($this->url . 'key/api/v1/pipelines', [
             'headers' => $this->authHeaders
         ]);
         $data = json_decode($response->getBody(), true);
@@ -68,8 +70,7 @@ class Text2ImageService
         ]
     ];
 
-        $client = new Client();
-        $response = $client->post($this->url . 'key/api/v1/pipeline/run', [
+        $response = $this->client->post($this->url . 'key/api/v1/pipeline/run', [
             'multipart' => $formData,
             'headers' => $this->authHeaders
         ]);
@@ -80,12 +81,11 @@ class Text2ImageService
 
     public function checkGeneration($requestId, $attempts = 30, $delay = 10)
     {
-        $client = new Client();
         while ($attempts > 0) {
             //            Log::info('Попытка генерации №', $attempts);
             try {
 
-                $response = $client->get($this->url . 'key/api/v1/pipeline/status/' . $requestId, [
+                $response = $this->client->get($this->url . 'key/api/v1/pipeline/status/' . $requestId, [
                     'headers' => $this->authHeaders
                 ]);
                 $data = json_decode($response->getBody(), true);
@@ -103,4 +103,6 @@ class Text2ImageService
         //        Log::info('Не сгенерировано(');
         return null;
     }
+
+
 }
