@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Tests\Feature;
 
 use App\Console\Commands\Telegram\SubscribeForWeaherInCity;
@@ -222,3 +223,4 @@ class SubscribeForWeaherInCityTest extends TestCase
         $this->addToAssertionCount(1);
     }
 }
+

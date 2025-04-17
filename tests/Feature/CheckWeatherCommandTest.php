@@ -159,3 +159,4 @@ class CheckWeatherCommandTest extends TestCase
         parent::tearDown();
     }
 }
+

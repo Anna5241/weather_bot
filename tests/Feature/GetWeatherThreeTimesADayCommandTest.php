@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Tests\Feature;
 
 use App\Console\Commands\Telegram\GetWeatherThreeTimesADayCommand;
@@ -220,3 +221,4 @@ class GetWeatherThreeTimesADayCommandTest extends TestCase
         $this->addToAssertionCount(1);
     }
 }
+

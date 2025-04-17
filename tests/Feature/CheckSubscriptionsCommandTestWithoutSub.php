@@ -54,3 +54,4 @@ class CheckSubscriptionsCommandTestWithoutSub extends TestCase
         $this->addToAssertionCount(1);
     }
 }
+
