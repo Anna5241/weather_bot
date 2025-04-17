@@ -110,7 +110,7 @@ class ProcessImageGenerationWithWeather implements ShouldQueue
                 'response' => $response->body(),
             ]);
             return null;
-            
+
         } catch (\Exception $e) {
             Log::error('Ошибка при запросе погоды:', [
                 'city' => $city,
