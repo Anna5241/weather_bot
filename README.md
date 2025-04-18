@@ -1,66 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🌦️ Погодный бот для Telegram
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel-бот для Telegram, предоставляющий прогноз погоды и AI-генерацию изображений с погодой.
 
-## About Laravel
+## 📌 Содержание
+- [Функционал](#-функционал)
+- [Архитектура](#-архитектура)  
+- [Установка](#-установка)
+  - [Локальный запуск](#локальный-запуск)
+  - [Запуск через Docker](#запуск-через-docker)
+- [Конфигурация](#-конфигурация)
+- [Документация API](#-документация-api)
+- [Тестирование](#-тестирование)
+- [Поддержка](#-поддержка)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🌟 Функционал
+- `/start` - Начать работу с ботом
+- `/help` - Показать все команды
+- `/check_weather [город]` - Текущая погода + AI-изображение
+- `/subscribe_for_weather_in_city [город]` - Подписка на рассылку (3 раза/день)
+- `/unsubscribe_all_cities` - Отписаться от всех рассылок
+- `/check_subscriptions` - Активные подписки
+- `/unsubscribe_concrete_city [город]` - Отписаться от рассылки погоды одного города
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🏗 Архитектура
+### Основной стек
+| Компонент       | Технология |
+|----------------|------------|
+| Бэкенд         | Laravel 12 |
+| База данных    | MySQL |
+| Очереди        | Redis      |
+| Планировщик    | Laravel Scheduler |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Внешние сервисы
+- [WeatherAPI](https://www.weatherapi.com/) - Данные о погоде
+- [FusionBrain](https://fusionbrain.ai/) - Генерация изображений
 
-## Learning Laravel
+## 💻 Установка
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Локальный запуск
+```bash
+# Установка зависимостей
+composer install
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# Настройка окружения
+cp .env.example .env
+nano .env  # Редактируем настройки
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Запуск сервера
+php artisan serve --port=8000
 
-## Laravel Sponsors
+# В отдельных терминалах:
+php artisan queue:work --timeout=3500
+php artisan schedule:work
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Настройка ngrok
+ngrok http 8000
 
-### Premium Partners
+# Установка вебхука
+curl -F "url=<NGROK_URL>" "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook"
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Запуск через Docker
+```bash
+docker compose up -d
 
-## Contributing
+# Получаем ngrok URL
+docker compose logs ngrok --tail=100
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Устанавливаем вебхук (замените параметры)
+curl -F "url=<NGROK_URL>" "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook"
+```
 
-## Code of Conduct
+### ⚙ Конфигурация
+```ini
+TELEGRAM_BOT_TOKEN=ваш_токен
+WEATHER_API_KEY=ключ_weatherapi
+FUSION_BRAIN_API_KEY=ключ_kandinsky
+FUSION_BRAIN_SECRET_KEY=секрет_kandinsky
+NGROK_AUTH_TOKEN=ваш_ngrok_токен
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# База данных (по умолчанию SQLite)
+DB_CONNECTION=sqlite
+DB_DATABASE=/полный/путь/к/database.sqlite
 
-## Security Vulnerabilities
+# Очереди
+QUEUE_CONNECTION=redis
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 🧪 Тестирование
+```bash
+php artisan test
+```
 
-## License
+### 📚 Документация API 
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Команды бота
+
+| Команда                      | Описание |
+|------------------------------|----------|
+| `/start`                     | Инициализация бота, отправка приветственного сообщения с краткой инструкцией |
+| `/help`                      | Отправка полного списка доступных команд с пояснениями |
+| `/check_weather [город]`     | Получение актуального прогноза погоды для указанного города:<br>• Запрос данных через WeatherAPI<br>• В случае ошибки во время поиска города отправка сообщения с информацией об отсутствии такого города<br>• Генерация визуализации через FusionBrain AI<br>• В случае ошибки во время генерации изображения отправка сообщения с данными погоды без изображения<br>• Формирование и отправка сообщения с данными и изображением |
+| `/subscribe_for_weather_in_city [город]` | Активация регулярной (3 раза/день) рассылки погоды:<br>• Сохранение подписки в БД (chat_id + город)<br>• Подтверждение успешной подписки |
+| `/unsubscribe_all_cities`    | Полная отмена всех активных подписок:<br>• Проверка существования подписок перед удалением<br>• Удаление всех записей пользователя из БД<br>• Подтверждение отмены рассылки |
+| `/check_subscriptions`       | Просмотр текущих подписок:<br>• Запрос активных подписок из БД<br>• Форматированный вывод списка городов |
+| `/unsubscribe_concrete_city [город]` | Отмена конкретной подписки:<br>• Удаление указанного города для chat_id<br>• Проверка существования подписки перед удалением |
+
+#### Вебхук
+POST /api/webhook - Обработчик вебхука Telegram
+
+### 📬 Поддержка
+- Проблемы: GitHub Issues
+- Контакты в telegram: @the_best_bitch @KravtsovaMarina @KuroNeckojinja
+
+
+
