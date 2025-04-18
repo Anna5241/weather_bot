@@ -10,13 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class BootstrapAppTest extends TestCase
 {
-    public function createApplication()
-    {
-        $app = require __DIR__.'/../../bootstrap/app.php';
-        $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
-        return $app;
-    }
-
     #[Test]
     public function testApplicationIsProperlyConfigured()
     {
@@ -48,9 +41,6 @@ class BootstrapAppTest extends TestCase
         }
     }
 
-    /**
-     * Возвращает конфигурацию расписания в виде массива
-     */
     private function getScheduleConfiguration(): array
     {
         // Это имитация того, что находится в bootstrap/app.php
@@ -72,7 +62,6 @@ class BootstrapAppTest extends TestCase
             ],
         ];
     }
-
     public function testMiddlewareConfiguration()
     {
         $app = require __DIR__ . '/../../bootstrap/app.php';
