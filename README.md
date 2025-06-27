@@ -57,7 +57,7 @@ php artisan schedule:work
 ngrok http 8000
 
 # Установка вебхука
-curl -F "url=<NGROK_URL>" "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook"
+curl -F "url=<NGROK_URL>/api/webhook" "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook"
 ```
 
 ### Запуск через Docker
